@@ -1,4 +1,4 @@
-# simple_pipeline
+# strava_pipeline
 Building my first end-to-end simple data engineering pipeline
 
 # Initial Data Architecture Diagram
