@@ -16,8 +16,8 @@ resource "aws_iam_role" "worker_role" {
   })
 }
 
-resource "aws_iam_policy" "landing_point_policy" {
-  name        = "landing_point_policy"
+resource "aws_iam_policy" "gomu_landing_bucket_policy" {
+  name        = "gomu_landing_bucket_policy"
   path        = "/"
   description = "Allow "
 
@@ -35,14 +35,14 @@ resource "aws_iam_policy" "landing_point_policy" {
         ],
         "Resource" : [
           "arn:aws:s3:::*/*",
-          "arn:aws:s3:::landing_point"
+          "arn:aws:s3:::gomu_landing_bucket"
         ]
       }
     ]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "attach_landing_point_policy_to_worker" {
+resource "aws_iam_role_policy_attachment" "attach_gomu_landing_bucket_policy_to_worker" {
   role       = aws_iam_role.worker_role.name
-  policy_arn = aws_iam_policy.landing_point_policy.arn
+  policy_arn = aws_iam_policy.gomu_landing_bucket_policy.arn
 }
