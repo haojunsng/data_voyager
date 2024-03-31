@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "gomu_landing_bucket" {
-  bucket = "gomu-landing-bucket"
+  bucket        = "gomu-landing-bucket"
   force_destroy = true
 }
 
