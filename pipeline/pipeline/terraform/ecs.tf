@@ -84,14 +84,6 @@ resource "aws_ecs_task_definition" "definition" {
             {
                 "name": "REFRESH_TOKEN",
                 "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/refresh_token"
-            },
-            {
-                "name": "AWS_ACCESS_KEY_ID",
-                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/key_id"
-            },
-            {
-                "name": "AWS_SECRET_ACCESS_KEY",
-                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/access_key"
             }
     ],
     "environment": [
