@@ -56,8 +56,7 @@ resource "aws_ecs_task_definition" "definition" {
   memory                   = "1024"
   requires_compatibilities = ["FARGATE"]
   runtime_platform {
-    operating_system_family = "LINUX"
-    cpu_architecture        = "ARM64"
+    cpu_architecture = "X86_64"
   }
   container_definitions = <<DEFINITION
 [
