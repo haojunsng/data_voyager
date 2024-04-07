@@ -83,11 +83,11 @@ resource "aws_ecs_task_definition" "definition" {
             },
             {
                 "name": "AWS_ACCESS_KEY_ID",
-                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/aws_access_key_id"
+                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/key_id"
             },
             {
                 "name": "AWS_SECRET_ACCESS_KEY",
-                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/aws_secret_access_key"
+                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/access_key"
             }
     ],
     "environment": [
@@ -129,7 +129,9 @@ resource "aws_iam_policy" "ssm_parameter_store_permissions" {
         "Resource" : [
           "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/client_id",
           "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/client_secret",
-          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/refresh_token"
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/refresh_token",
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/key_id",
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/access_key"
         ]
       }
     ]
