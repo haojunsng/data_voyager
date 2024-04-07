@@ -55,7 +55,11 @@ resource "aws_ecs_task_definition" "definition" {
   cpu                      = "256"
   memory                   = "1024"
   requires_compatibilities = ["FARGATE"]
-  container_definitions    = <<DEFINITION
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
+  container_definitions = <<DEFINITION
 [
   {
     "image": "${local.account_id}.dkr.ecr.${local.aws_region}.amazonaws.com/${aws_ecr_repository.gomu_repo.name}:latest",
