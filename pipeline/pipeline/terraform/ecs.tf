@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "role-name"
+  name = "ecs_task_execution_role"
 
   assume_role_policy = <<EOF
 {
@@ -19,7 +19,7 @@ EOF
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name = "role-name-task"
+  name = "ecs_task_role"
 
   assume_role_policy = <<EOF
 {
@@ -111,4 +111,32 @@ resource "aws_ecs_task_definition" "definition" {
   }
 ]
 DEFINITION
+}
+
+resource "aws_iam_policy" "ssm_parameter_store_permissions" {
+  name        = "parameter_read_permissions"
+  description = "Allow "
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "ParamsPolicy",
+        "Effect" : "Allow",
+        "Action" : [
+          "ssm:GetParameters"
+        ],
+        "Resource" : [
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/client_id",
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/client_secret",
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/refresh_token"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_ssm_parameters_read_policy_to_ecs_task_execution_role" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.ssm_parameter_store_permissions.arn
 }
