@@ -31,7 +31,7 @@ resource "aws_iam_role_policy_attachment" "attach_gomu_landing_bucket_policy_to_
 
 # To attach to Airflow Role
 resource "aws_iam_policy" "airflow_policy" {
-  name        = "gomu_landing_bucket_policy"
+  name        = "airflow_policy"
   path        = "/"
   description = "Allow "
 
