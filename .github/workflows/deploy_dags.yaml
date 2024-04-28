@@ -1,12 +1,7 @@
 name: Sync DAGs to S3
 
-on:
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'pipeline/pipeline/orchestration/dags/**'
-  workflow_dispatch:
+on: workflow_dispatch
+
 
 env:
   AWS_REGION: "ap-southeast-1"
@@ -16,9 +11,6 @@ jobs:
   sync-dags:
     name: CD - Sync DAGs to S3
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v2
