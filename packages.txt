@@ -1,0 +1,4 @@
+poetry
+pre-commit
+hashicorp/tap/terraform
+docker
