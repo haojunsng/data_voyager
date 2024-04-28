@@ -1,7 +1,4 @@
 # Makefile for local Airflow Setup
-setup:
-	pip install -r requirements.txt
-
 airflow-init:
 	docker compose up airflow-init
 
