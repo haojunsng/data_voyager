@@ -169,3 +169,9 @@ terraform.rc
 
 # Mac
 .DS_Store
+
+# local airflow
+**/dev/**
+!docker-compose.yaml
+!Makefile
+!requirements.txt

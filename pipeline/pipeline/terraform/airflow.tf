@@ -104,6 +104,7 @@ resource "aws_iam_policy" "airflow_policy" {
 
 resource "aws_mwaa_environment" "gomu_airflow" {
   count              = var.deploy_mwaa ? 1 : 0
+  airflow_version    = "2.9.0"
   dag_s3_path        = "dags/"
   execution_role_arn = aws_iam_role.airflow_role.arn
   name               = "gomu_airflow"
