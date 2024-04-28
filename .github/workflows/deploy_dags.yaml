@@ -4,10 +4,6 @@ on:
   pull_request:
 
 
-env:
-  AWS_REGION: "ap-southeast-1"
-  AWS_ACCOUNT_ID: "585233238792"
-
 jobs:
   sync-dags:
     name: CD - Sync DAGs to S3
@@ -22,8 +18,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-actions-haojunsng-strava_pipeline
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-haojunsng-strava_pipeline
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload Python files to S3 Bucket
         run: |
