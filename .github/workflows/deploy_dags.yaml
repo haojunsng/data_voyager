@@ -1,0 +1,31 @@
+name: Sync DAGs to S3
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'pipeline/pipeline/orchestration/dags/**'
+
+
+jobs:
+  sync-dags:
+    name: CD - Sync DAGs to S3
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-haojunsng-strava_pipeline
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload Python files to S3 Bucket
+        run: |
+          echo "Syncing DAGs to S3..."
+          aws s3 sync pipeline/pipeline/orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only
