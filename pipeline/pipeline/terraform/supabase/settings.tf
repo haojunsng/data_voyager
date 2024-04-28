@@ -1,6 +1,6 @@
 # Configure api settings for the linked project
-resource "supabase_settings" "production" {
-  project_ref = supabase_project.strava_pipeline
+resource "supabase_settings" "strava_pipeline" {
+  project_ref = var.supabase_project_ref
 
   api = jsonencode({
     db_schema            = "public"

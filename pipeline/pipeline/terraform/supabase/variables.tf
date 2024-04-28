@@ -13,3 +13,8 @@ variable "supabase_database_password" {
   type      = string
   sensitive = true
 }
+
+variable "supabase_project_ref" {
+  type      = string
+  sensitive = true
+}
