@@ -1,7 +1,11 @@
 name: Sync DAGs to S3
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - 'pipeline/pipeline/orchestration/dags/**'
 
 
 jobs:
