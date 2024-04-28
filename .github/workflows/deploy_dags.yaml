@@ -26,8 +26,6 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Upload Python files to S3 Bucket
-        env:
-          AIRFLOW_BUCKET: gomu-airflow-s3
         run: |
           echo "Syncing DAGs to S3..."
-          aws s3 sync pipeline/pipeline/orchestration/dags/ s3://$AIRFLOW_BUCKET/dags/ --size-only true
+          aws s3 sync pipeline/pipeline/orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only true
