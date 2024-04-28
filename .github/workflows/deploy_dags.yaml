@@ -28,4 +28,4 @@ jobs:
       - name: Upload Python files to S3 Bucket
         run: |
           echo "Syncing DAGs to S3..."
-          aws s3 sync pipeline/pipeline/orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only true
+          aws s3 sync pipeline/pipeline/orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only
