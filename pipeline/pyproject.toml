@@ -10,6 +10,7 @@ packages = [{include = "pipeline"}]
 python = "^3.11"
 requests = "^2.31.0"
 boto3 = "^1.34.74"
+psycopg2-binary = "^2.9.9"
 
 
 [build-system]
