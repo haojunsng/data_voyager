@@ -1,11 +1,11 @@
 name: Sync DAGs to S3
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'pipeline/pipeline/orchestration/dags/**'
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'pipeline/pipeline/orchestration/dags/**'
   workflow_dispatch:
 
 env:
