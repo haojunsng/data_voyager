@@ -175,3 +175,6 @@ terraform.rc
 !docker-compose.yaml
 !Makefile
 !requirements.txt
+
+# supabase
+access-token
