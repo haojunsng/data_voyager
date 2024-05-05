@@ -171,7 +171,6 @@ terraform.rc
 .DS_Store
 
 # local airflow
-**/dev/**
-!docker-compose.yaml
-!Makefile
-!requirements.txt
+**/dev/logs/**
+**/dev/plugins/**
+**/dev/config/**
