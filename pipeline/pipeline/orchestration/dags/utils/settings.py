@@ -21,3 +21,6 @@ NETWORK_CONFIGURATION = {
         "assignPublicIp": "ENABLED",
     }
 }
+
+# S3
+S3_RAW_BUCKET = "gomu-landing-bucket"
