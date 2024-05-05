@@ -7,7 +7,7 @@ This subdirectory manages all orchestration work around extracting & loading.
 
 ### `StravaToS3Operator` & `S3ToSupabaseOperator`:
 ---
-
+![dag](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/dag.png)
 - Custom StravaToS3Operator is created to manage STRAVA API extraction using Airflow Operator, by inheriting EcsRunTaskOperator
 - Custom S3ToSupabaseOperator is created to load data from S3 to Supabase Postgres database.
 - Both logics (STRAVA extraction & Loading to Supabase are managed in `extract/` and `load/` respectively)

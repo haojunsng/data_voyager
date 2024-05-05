@@ -35,3 +35,5 @@ s3_stats_to_supabase = S3ToSupabaseOperator(
     s3_bucket=S3_RAW_BUCKET,
     s3_key="source=strava/type=statistics/date=20240505/stats.json",
 )  # TODO: Use airflow data_interval template variables
+
+strava_to_s3 >> s3_stats_to_supabase
