@@ -30,7 +30,10 @@ data "aws_iam_policy_document" "github_actions" {
       "ecr:PutImage",
       "ecr:UploadLayerPart",
     ]
-    resources = [aws_ecr_repository.gomu_repo.arn]
+    resources = [
+      aws_ecr_repository.gomu_repo.arn,
+      aws_ecr_repository.sabo_repo.arn
+    ]
   }
 
   statement {
