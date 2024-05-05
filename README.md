@@ -7,7 +7,7 @@
 This repository contains three parts - navigate to the respective subfolders for a more in-depth description.
 - [`extract/`](https://github.com/haojunsng/strava_pipeline/tree/main/pipeline/pipeline/extract#readme) contains the logic of data extraction from STRAVA API.
 - [`load/`](https://github.com/haojunsng/strava_pipeline/tree/main/pipeline/pipeline/load#readme) contains the logic of loading data from landing buckets to database.
-- [`transformation/`](https://github.com/haojunsng/strava_pipeline/tree/main/pipeline/pipeline/transformation#readme) contains the transformation logic.
+- [`transformation/`](https://github.com/haojunsng/strava_pipeline/tree/main/pipeline/pipeline/iac#readme) contains the transformation logic.
 - [`orchestration/`](https://github.com/haojunsng/strava_pipeline/tree/main/pipeline/pipeline/orchestration#readme) contains the airflow code and DAGs.
 - [`terraform/`](https://github.com/haojunsng/strava_pipeline/tree/main/pipeline/pipeline/terraform#readme) contains the IaC for all necessary resources provisioned.
 
