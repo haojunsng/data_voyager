@@ -39,7 +39,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+          ECR_REPOSITORY: ${{ secrets.GOMU_REPO_NAME }}
           IMAGE_TAG: latest
         run: |
           cd pipeline/pipeline/extract
