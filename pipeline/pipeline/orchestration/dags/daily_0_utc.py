@@ -1,6 +1,6 @@
 from airflow import DAG
-from airflow.operators.dummy_operator import DummyOperator
 from utils.settings import OWNER, EMAIL
+from utils.StravaToS3Operator import StravaToS3Operator
 from datetime import datetime, timedelta
 
 
@@ -26,7 +26,4 @@ dag = DAG(
 
 
 # Define the task to print the current date and time
-usopp = DummyOperator(
-    task_id="dummy",
-    dag=dag,
-)
+strava_to_s3 = StravaToS3Operator(task_id="strava_to_s3", dag=dag, strava_id="47247266")
