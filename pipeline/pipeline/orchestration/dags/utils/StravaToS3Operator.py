@@ -1,6 +1,6 @@
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 import os
-from settings import (
+from .settings import (
     TASK_DEFINITION,
     ECS_CLUSTER,
     ECS_CONTAINER_NAME,
