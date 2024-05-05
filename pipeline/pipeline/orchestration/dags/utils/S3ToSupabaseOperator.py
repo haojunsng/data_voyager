@@ -1,26 +1,26 @@
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from .settings import (
-    GOMU_TASK_DEFINITION,
+    SABO_TASK_DEFINITION,
     ECS_CLUSTER,
-    GOMU_CONTAINER_NAME,
+    SABO_CONTAINER_NAME,
     NETWORK_CONFIGURATION,
 )
 
 
-class StravaToS3Operator(EcsRunTaskOperator):
+class S3ToSupabaseOperator(EcsRunTaskOperator):
     """
-    Custom StravaToS3Operator that inherits from EcsRunTaskOperator
+    Custom S3ToSupabaseOperator that inherits from EcsRunTaskOperator
     """
 
-    def __init__(self, strava_id, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(
-            task_definition=GOMU_TASK_DEFINITION,
+            task_definition=SABO_TASK_DEFINITION,
             cluster=ECS_CLUSTER,
             overrides={
                 "containerOverrides": [
                     {
-                        "name": GOMU_CONTAINER_NAME,
-                        "command": [f"python main.py {strava_id}"],
+                        "name": SABO_CONTAINER_NAME,
+                        "command": ["python main.py"],
                     },
                 ],
             },

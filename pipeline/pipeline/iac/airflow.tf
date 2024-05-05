@@ -55,7 +55,10 @@ resource "aws_iam_policy" "airflow_policy" {
           "ecs:RunTask",
           "ecs:DescribeTasks"
         ],
-        "Resource" : [aws_ecs_task_definition.definition.arn]
+        "Resource" : [
+          aws_ecs_task_definition.extract_definition.arn,
+          aws_ecs_task_definition.load_definition.arn
+        ]
       },
       {
         "Sid" : "PassRole",
