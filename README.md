@@ -35,7 +35,7 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 ### `load`
 ---
 #### Description
-Supabase is chosen as the postgres database for this project mostly because they recently went GA, and the UI looks pretty clean and most importantly I can keep within the free tier very comfortably.
+[Supabase](https://supabase.com/) is chosen as the postgres database for this project mostly because they recently went GA, and the UI looks pretty clean and most importantly I can keep within the free tier very comfortably.
 
 #### Supabase
 ![supabase](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/supabase.png)
@@ -43,11 +43,12 @@ Supabase is chosen as the postgres database for this project mostly because they
 
 ### `transformation`
 ---
+[dbt](https://docs.getdbt.com/docs/introduction) is chosen to handle all data transformation work required.
 
 ### `orchestration`
 ---
 #### Description
-This subdirectory manages all orchestration work around extracting, loading and transforming of data.
+[Airflow](https://airflow.apache.org/) is chosen to manage all orchestration work around extracting, loading and transforming of data.
 - Extraction of data from STRAVA API to S3 bucket: [StravaToS3Operator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/StravaToS3Operator.py)
 - Loading of data from S3 bucket to Supabase: [S3ToSupabaseOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py)
 

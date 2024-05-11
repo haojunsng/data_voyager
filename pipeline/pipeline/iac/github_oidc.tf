@@ -32,7 +32,8 @@ data "aws_iam_policy_document" "github_actions" {
     ]
     resources = [
       aws_ecr_repository.gomu_repo.arn,
-      aws_ecr_repository.sabo_repo.arn
+      aws_ecr_repository.sabo_repo.arn,
+      aws_ecr_repository.ace_repo.arn
     ]
   }
 

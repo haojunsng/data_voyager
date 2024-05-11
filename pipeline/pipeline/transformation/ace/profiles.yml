@@ -1,0 +1,17 @@
+# profiles.yml
+
+# Replace the profile name with a name of your choice
+ace:
+  target: portgas
+
+  outputs:
+    portgas:
+      type: postgres
+      host: "{{ env_var('DBT_HOST') }}"
+      port: 5432
+      user: "{{ env_var('DBT_USER') }}"
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      dbname: postgres
+      schema: public
+      threads: 2
+      keepalives_idle: 0
