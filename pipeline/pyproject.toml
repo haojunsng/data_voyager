@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["haojunsng <snghaojun@outlook.sg>"]
 readme = "README.md"
-packages = [{include = "pipeline"}]
+package-mode = false
+
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
