@@ -20,23 +20,23 @@ jobs:
       with:
         path: ~/.cache/pre-commit
         key: ${{ runner.os }}-precommit-${{ hashFiles('.pre-commit-config.yaml') }}
-    - name: Install and configure Poetrysnok/install-poetry@v1
-      uses:
+    - name: Install and configure Poetry
+      uses: snok/install-poetry@v1
       with:
         version: 1.8.2
         virtualenvs-create: true
         virtualenvs-in-project: true
-    # - name: Set up cache
-    #   uses: actions/cache@v2
-    #   id: cached-poetry-dependencies
-    #   with:
-    #     path: .venv
-    #     key: venv-${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
-    # - name: Install dependencies
-    #   if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-    #   run: poetry install
-    # - name: Run pre-commit
-    #   run: pre-commit run --all-files
+    - name: Set up cache
+      uses: actions/cache@v2
+      id: cached-poetry-dependencies
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: poetry install
+    - name: Run pre-commit
+      run: pre-commit run --all-files
     - name: Run tests for DAGs
       run: |
         cd pipeline/orchestration/dags
