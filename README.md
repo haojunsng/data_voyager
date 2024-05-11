@@ -65,7 +65,7 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 
 #### `dev/`:
 - Local airflow development environment for testing
-- Symlinked to `'orchestration/dags/`
+- Symlinked to `orchestration/dags/`
 - Use `docker-compose up` to spin up local airflow
 
 ### `iac`
