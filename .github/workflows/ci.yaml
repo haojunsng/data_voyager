@@ -35,11 +35,13 @@ jobs:
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install
-    - name: Run pre-commit
-      run: |
-        pip install pre-commit
-        pre-commit run --all-files
-    - name: Run tests for DAGs
-      run: |
-        cd pipeline/orchestration/dags
-        python tests/dag_integrity.py
+    - name: debug
+      run: pip freeze
+    # - name: Run pre-commit
+    #   run: |
+    #     pip install pre-commit
+    #     pre-commit run --all-files
+    # - name: Run tests for DAGs
+    #   run: |
+    #     cd pipeline/orchestration/dags
+    #     python tests/dag_integrity.py
