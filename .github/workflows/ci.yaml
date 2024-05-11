@@ -26,7 +26,7 @@ jobs:
         version: 1.8.2
     - name: Install dependencies
       run: |
-        poetry shell
+        poetry shell --no-interaction
         poetry install
     - name: Run pre-commit
       run: |
