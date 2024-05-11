@@ -13,3 +13,10 @@ repos:
     rev: v1.88.3
     hooks:
       - id: terraform_fmt
+  - repo: local
+    hooks:
+      - id: dag-tests
+        stages: [push]
+        name: dag-tests
+        entry: bash -c 'make test'
+        language: system
