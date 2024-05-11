@@ -1,6 +1,6 @@
 # strava_pipeline
 
-## Initial Data Architecture Diagram
+## Data Architecture
 ![Archi](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/archi.png)
 
 ## Repository Navigation
@@ -53,20 +53,17 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 - Loading of data from S3 bucket to Supabase: [S3ToSupabaseOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py)
 
 #### `StravaToS3Operator` & `S3ToSupabaseOperator`:
----
 ![dag](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/dag.png)
 - Custom [StravaToS3Operator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
 - Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
 - Both logic (STRAVA extraction & Loading to Supabase) are managed in `extract/` and `load/` respectively
 
 #### Deployment of DAGs to Airflow:
----
 ![s3](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/s3.png)
 - Deployed to AWS S3 bucket through Github Actions `aws s3 sync` for MWAA cluster
 
 
 #### `dev/`:
----
 - Local airflow development environment for testing
 - Symlinked to `'orchestration/dags/`
 - Use `docker-compose up` to spin up local airflow
@@ -98,6 +95,9 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 - The supabase terraform provider is very very new. Might not be as stable unfortunately.
 - Currently only supports local `terraform init/plan/apply` as `.tfstate` files are maintained locally -- does not support collaboration yet.
 
+### Using GitHub Workflows with OIDC to Push Images to Amazon ECR
+
+In this project, GitHub Workflows along with OIDC authentication are leveraged to automate the process of pushing/updating images to ECR on AWS.
 
 ### Environment Variables Management
 
@@ -116,3 +116,6 @@ In Python code, a straightforward method of retrieval is used (`os.environ.get`)
 ### Secure Credential Management
 
 Confidential credentials, such as API keys and database passwords, are securely stored in the AWS Systems Manager (SSM) Parameter Store. They are retrieved securely at runtime and passed into the ECS containers.
+
+### Workflow Management
+[Jira](https://snghaojun18.atlassian.net/jira/software/projects/SNG/boards/2)
