@@ -26,8 +26,7 @@ jobs:
         version: 1.8.2
     - name: Install dependencies
       run: |
-        poetry install
-        source $(poetry env info --path)/bin/activate
+        poetry install && source $(poetry env info --path)/bin/activate
     - name: Run pre-commit
       run: |
         pre-commit run --all-files
