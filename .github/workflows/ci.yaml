@@ -26,10 +26,10 @@ jobs:
         version: 1.8.2
     - name: Install dependencies
       run: |
-        poetry install && source $(poetry env info --path)/bin/activate
+        poetry install
     - name: Run pre-commit
       run: |
-        pre-commit run --all-files
+        source $(poetry env info --path)/bin/activate && pre-commit run --all-files
     - name: Run tests for DAGs
       run: |
         cd pipeline/orchestration/dags
