@@ -33,4 +33,4 @@ jobs:
     - name: Run tests for DAGs
       run: |
         cd pipeline/orchestration/dags
-        python tests/dag_integrity.py
+        source $(poetry env info --path)/bin/activate && python tests/dag_integrity.py
