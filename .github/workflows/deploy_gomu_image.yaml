@@ -12,6 +12,9 @@ jobs:
   build:
     name: CD - Push Docker Image to ECR
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./pipeline
     permissions:
       id-token: write
       contents: read
@@ -42,6 +45,6 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.GOMU_REPO_NAME }}
           IMAGE_TAG: latest
         run: |
-          cd pipeline/pipeline/extract
+          cd pipeline/extract
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
