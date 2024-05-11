@@ -25,9 +25,9 @@ jobs:
       with:
         version: 1.8.2
     - name: Install dependencies
-      run: poetry install
-    - name: debug
-      run: pip freeze
+      run: |
+        poetry shell
+        poetry install
     - name: Run pre-commit
       run: |
         pip install pre-commit
