@@ -26,11 +26,10 @@ jobs:
         version: 1.8.2
     - name: Install dependencies
       run: |
-        poetry shell --no-interaction
+        source $(poetry env info --path)/bin/activate
         poetry install
     - name: Run pre-commit
       run: |
-        pip install pre-commit
         pre-commit run --all-files
     - name: Run tests for DAGs
       run: |
