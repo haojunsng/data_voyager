@@ -12,7 +12,7 @@ class StravaToS3Operator(EcsRunTaskOperator):
     Custom StravaToS3Operator that inherits from EcsRunTaskOperator
     """
 
-    def __init__(self, strava_id, **kwargs):
+    def __init__(self, s3_key, **kwargs):
         super().__init__(
             task_definition=GOMU_TASK_DEFINITION,
             cluster=ECS_CLUSTER,
@@ -20,7 +20,7 @@ class StravaToS3Operator(EcsRunTaskOperator):
                 "containerOverrides": [
                     {
                         "name": GOMU_CONTAINER_NAME,
-                        "command": [f"python main.py {strava_id}"],
+                        "command": [f"python main.py {s3_key}"],
                     },
                 ],
             },

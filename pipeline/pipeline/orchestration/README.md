@@ -22,3 +22,4 @@ This subdirectory manages all orchestration work around extracting & loading.
 ---
 - Local airflow development environment for testing
 - Symlinked to `'orchestration/dags/`
+- Use `docker-compose up` to spin up local airflow

@@ -12,7 +12,7 @@ class S3ToSupabaseOperator(EcsRunTaskOperator):
     Custom S3ToSupabaseOperator that inherits from EcsRunTaskOperator
     """
 
-    def __init__(self, table_name, s3_bucket, s3_key, **kwargs):
+    def __init__(self, table_name, s3_key, **kwargs):
         super().__init__(
             task_definition=SABO_TASK_DEFINITION,
             cluster=ECS_CLUSTER,
@@ -20,9 +20,7 @@ class S3ToSupabaseOperator(EcsRunTaskOperator):
                 "containerOverrides": [
                     {
                         "name": SABO_CONTAINER_NAME,
-                        "command": [
-                            f"python main.py {table_name} {s3_bucket} {s3_key}"
-                        ],
+                        "command": [f"python main.py {table_name} {s3_key}"],
                     },
                 ],
             },
