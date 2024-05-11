@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["haojunsng <snghaojun@outlook.sg>"]
 readme = "README.md"
-packages = [{include = "pipeline"}]
+package-mode = false
+
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
@@ -13,6 +14,7 @@ boto3 = "^1.34.74"
 psycopg2-binary = "^2.9.9"
 apache-airflow = {extras = ["amazon"], version = "^2.9.0"}
 pandas = "2.1.4"
+pre-commit = "^3.7.1"
 
 [build-system]
 requires = ["poetry-core"]

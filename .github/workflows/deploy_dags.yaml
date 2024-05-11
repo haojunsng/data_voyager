@@ -12,6 +12,9 @@ jobs:
   sync-dags:
     name: CD - Sync DAGs to S3
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./pipeline
     permissions:
       id-token: write
       contents: read
@@ -28,4 +31,4 @@ jobs:
       - name: Upload Python files to S3 Bucket
         run: |
           echo "Syncing DAGs to S3..."
-          aws s3 sync pipeline/pipeline/orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only
+          aws s3 sync pipeline/orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only

@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./pipeline
 
     steps:
     - uses: actions/checkout@v2
@@ -17,7 +20,17 @@ jobs:
       with:
         path: ~/.cache/pre-commit
         key: ${{ runner.os }}-precommit-${{ hashFiles('.pre-commit-config.yaml') }}
-    - name: Install pre-commit
-      run: pip install pre-commit
+    - name: Install and configure Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.8.2
+    - name: Install dependencies
+      run: |
+        poetry install
     - name: Run pre-commit
-      run: pre-commit run --all-files
+      run: |
+        source $(poetry env info --path)/bin/activate && pre-commit run --all-files
+    - name: Run tests for DAGs
+      run: |
+        cd pipeline/orchestration/dags
+        source $(poetry env info --path)/bin/activate && python tests/dag_integrity.py
