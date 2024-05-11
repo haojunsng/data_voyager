@@ -57,7 +57,8 @@ resource "aws_iam_policy" "airflow_policy" {
         ],
         "Resource" : [
           aws_ecs_task_definition.extract_definition.arn,
-          aws_ecs_task_definition.load_definition.arn
+          aws_ecs_task_definition.load_definition.arn,
+          aws_ecs_task_definition.transformation_definition.arn
         ]
       },
       {

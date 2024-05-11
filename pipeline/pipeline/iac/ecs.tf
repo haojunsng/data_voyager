@@ -161,6 +161,67 @@ resource "aws_ecs_task_definition" "load_definition" {
 DEFINITION
 }
 
+resource "aws_ecs_task_definition" "transformation_definition" {
+  family                   = "ace-task-definition"
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  network_mode             = "awsvpc"
+  cpu                      = "256"
+  memory                   = "1024"
+  requires_compatibilities = ["FARGATE"]
+  runtime_platform {
+    cpu_architecture = "X86_64"
+  }
+  container_definitions = <<DEFINITION
+[
+  {
+    "image": "${local.account_id}.dkr.ecr.${local.aws_region}.amazonaws.com/${aws_ecr_repository.ace_repo.name}:latest",
+    "name": "ace-ace",
+    "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-region" : "${local.aws_region}",
+                    "awslogs-group" : "${aws_cloudwatch_log_group.gomu_log_group.name}",
+                    "awslogs-stream-prefix" : "ace"
+                }
+    },
+    "secrets": [
+            {
+                "name": "DBT_HOST",
+                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/dbt_host"
+            },
+            {
+                "name": "DBT_USER",
+                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/dbt_user"
+            },
+            {
+                "name": "DBT_PASSWORD",
+                "valueFrom": "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/dbt_password"
+            }
+    ],
+    "environment": [
+            {
+                "name": "vpc_id",
+                "value": "${local.vpc_id}"
+            },
+            {
+                "name": "first_subnet_id",
+                "value": "${local.first_subnet_id}"
+            },
+            {
+                "name": "second_subnet_id",
+                "value": "${local.second_subnet_id}"
+            },
+            {
+                "name": "security_group_id",
+                "value": "${local.security_group_id}"
+            }
+    ]
+  }
+]
+DEFINITION
+}
+
 resource "aws_iam_policy" "ssm_parameter_store_permissions" {
   name        = "parameter_read_permissions"
   description = "Allow "
@@ -179,6 +240,9 @@ resource "aws_iam_policy" "ssm_parameter_store_permissions" {
           "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/client_secret",
           "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/refresh_token",
           "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/supabase_connection_id",
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/dbt_host",
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/dbt_user",
+          "arn:aws:ssm:${local.aws_region}:${local.account_id}:parameter/dbt_password"
         ]
       }
     ]

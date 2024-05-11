@@ -1,11 +1,11 @@
-name: Push Load Image to ECR
+name: Push Transformation Image to ECR
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'pipeline/pipeline/load/**'
+      - 'pipeline/pipeline/transformation/ace/**'
 
 
 jobs:
@@ -42,9 +42,9 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.SABO_REPO_NAME }}
+          ECR_REPOSITORY: ${{ secrets.ACE_REPO_NAME }}
           IMAGE_TAG: latest
         run: |
-          cd pipeline/load
+          cd pipeline/transformation/ace
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
