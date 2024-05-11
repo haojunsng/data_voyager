@@ -16,3 +16,5 @@ clean-targets:
 models:
   ace:
     +materialized: table
+    dwd:
+    dws:
