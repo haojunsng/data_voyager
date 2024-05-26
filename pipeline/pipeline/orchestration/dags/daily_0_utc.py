@@ -2,6 +2,7 @@ from airflow import DAG
 from utils.settings import OWNER, EMAIL
 from utils.StravaToS3Operator import StravaToS3Operator
 from utils.S3ToSupabaseOperator import S3ToSupabaseOperator
+from utils.DbtOperator import DbtOperator
 from datetime import datetime, timedelta
 
 
@@ -42,4 +43,8 @@ s3_stats_to_supabase = S3ToSupabaseOperator(
     s3_key=S3_KEY,
 )
 
-strava_to_s3 >> s3_stats_to_supabase
+dbt = DbtOperator(
+    task_id="strava_transformation", dag=dag, cmd="run", select="tag:strava"
+)
+
+strava_to_s3 >> s3_stats_to_supabase >> dbt
