@@ -37,6 +37,7 @@ strava_to_s3 = StravaToS3Operator(
 s3_stats_to_supabase = S3ToSupabaseOperator(
     task_id="load_strava_activity",
     dag=dag,
+    schema_name="strava",
     table_name="ods_strava__activity",
     s3_key=S3_KEY,
 )

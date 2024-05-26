@@ -7,7 +7,16 @@ from sqlalchemy import create_engine
 
 
 class SupaCursor:
-    def __init__(self, table_name, s3_bucket, s3_key, if_exists="replace", index=False):
+    def __init__(
+        self,
+        schema_name,
+        table_name,
+        s3_bucket,
+        s3_key,
+        if_exists="replace",
+        index=False,
+    ):
+        self.schema_name = schema_name
         self.table_name = table_name
         self.s3_bucket = s3_bucket
         self.s3_key = s3_key
@@ -30,7 +39,13 @@ class SupaCursor:
 
         try:
             db = create_engine(self.connection_string)
-            df.to_sql(self.table_name, db, if_exists=self.if_exists, index=self.index)
+            df.to_sql(
+                self.table_name,
+                db,
+                schema=self.schema_name,
+                if_exists=self.if_exists,
+                index=self.index,
+            )
             print("Loaded to Supabase!")
         except psycopg2.Error as e:
             print("Error: Unable to connect to the Supabase...")
