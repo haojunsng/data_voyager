@@ -4,7 +4,7 @@
 ![Archi](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/archi.png)
 
 ## Repository Navigation
-This repository contains 5 parts - navigate to the respective subfolders for a more in-depth description.
+This repository contains 5 parts -
 
 I chose to adopt a monorepo approach only because this is more of an exploratory/hobby work and did not want the hassle of maintaining multiple repositories.
 
@@ -74,19 +74,19 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 [Terraform](https://www.terraform.io/) is chosen to support the IaC for this entire strava pipeline project.
 
 #### Resources maintained using Terraform:
+- ECS Task Definition
+- ECR
+- Cloudwatch Logs
+- S3 Buckets
 - Networking
     - VPC
     - Subnets
     - Security Group
-- ECS Task Definition
-- ECR
 - Identity Access Management
     - Service User for GHA
     - ECS Task Execution Role
     - ECS Task Role
     - Respective IAM policies required around authorisation management
-- Cloudwatch Logs
-- S3 Buckets
 
 #### Resources NOT maintained using Terraform:
 - SSM Parameters
@@ -119,3 +119,5 @@ Confidential credentials, such as API keys and database passwords, are securely 
 
 ### Workflow Management
 [Jira](https://snghaojun18.atlassian.net/jira/software/projects/SNG/boards/2)
+<img width="966" alt="image" src="https://github.com/haojunsng/strava_pipeline/assets/51106107/e6e24f95-b634-49f9-8298-e6512418eab9">
+
