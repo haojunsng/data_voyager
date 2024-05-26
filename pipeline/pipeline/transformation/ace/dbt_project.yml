@@ -16,3 +16,9 @@ clean-targets:
 models:
   ace:
     +materialized: table
+    dwd:
+      strava: &strava
+        +schema: strava
+        +tags: ["strava"]
+    dws:
+      strava: *strava
