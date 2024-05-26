@@ -10,6 +10,8 @@ GOMU_TASK_DEFINITION = "gomu-task-definition"
 GOMU_CONTAINER_NAME = "gomu-gomu"
 SABO_TASK_DEFINITION = "sabo-task-definition"
 SABO_CONTAINER_NAME = "sabo-sabo"
+ACE_TASK_DEFINITION = "ace-task-definition"
+ACE_CONTAINER_NAME = "ace-ace"
 ECS_CLUSTER = "gomu-ecs-cluster"
 NETWORK_CONFIGURATION = {
     "awsvpcConfiguration": {

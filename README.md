@@ -62,7 +62,8 @@ A monorepo approach to dbt Project management is taken because there will be dep
 ![dag](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/dag.png)
 - Custom [StravaToS3Operator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
 - Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
-- Both logic (STRAVA extraction & Loading to Supabase) are managed in `extract/` and `load/` respectively
+- Lastly, [DbtOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/DbtOperator.py)
+- All 3 logic (STRAVA extraction, Loading to Supabase & dbt Transformation) are managed in `extract/`, `load/` and `transformation/` respectively.
 
 #### Deployment of DAGs to Airflow:
 ![s3](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/s3.png)
