@@ -120,4 +120,3 @@ Confidential credentials, such as API keys and database passwords, are securely 
 ### Workflow Management
 [Jira](https://snghaojun18.atlassian.net/jira/software/projects/SNG/boards/2)
 <img width="966" alt="image" src="https://github.com/haojunsng/strava_pipeline/assets/51106107/e6e24f95-b634-49f9-8298-e6512418eab9">
-
