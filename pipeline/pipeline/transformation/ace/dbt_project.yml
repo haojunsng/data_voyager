@@ -17,4 +17,8 @@ models:
   ace:
     +materialized: table
     dwd:
+      strava:
+        +tags: ["strava"]
     dws:
+      strava:
+        +tags: ["strava"]
