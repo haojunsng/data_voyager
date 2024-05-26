@@ -1,7 +1,6 @@
 name: Push Transformation Image to ECR
 
 on:
-  pull_request:
   push:
     branches:
       - main
