@@ -42,7 +42,7 @@ class SupaCursor:
             df.to_sql(
                 self.table_name,
                 db,
-                schema=self.schema,
+                schema=self.schema_name,
                 if_exists=self.if_exists,
                 index=self.index,
             )
