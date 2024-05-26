@@ -43,7 +43,13 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 
 ### `transformation`
 ---
+![dbt](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/dbt.png)
+
 [dbt](https://docs.getdbt.com/docs/introduction) is chosen to handle all data transformation work required.
+
+#### dbt Project Management
+
+A monorepo approach to dbt Project management is taken because there will be dependencies between `strava` dbt_project and `weather` dbt_project -- I'd prefer to have them all in 1 place just so the dependencies between can be captured by dbt.
 
 ### `orchestration`
 ---
