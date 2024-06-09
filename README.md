@@ -62,7 +62,7 @@ A monorepo approach to dbt Project management is taken because there will be dep
 ![dag](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/dag.png)
 - Custom [StravaToS3Operator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
 - Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
-- Lastly, [DbtOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/DbtOperator.py)
+- Lastly, [DbtOperator](https://github.com/haojunsng/strava_pipeline/blob/main/pipeline/pipeline/orchestration/dags/utils/DbtOperator.py) which triggers dbt tasks through ECS to execute the transformation logic.
 - All 3 logic (STRAVA extraction, Loading to Supabase & dbt Transformation) are managed in `extract/`, `load/` and `transformation/` respectively.
 
 #### Deployment of DAGs to Airflow:
@@ -98,9 +98,19 @@ A monorepo approach to dbt Project management is taken because there will be dep
 #### Resources NOT maintained using Terraform:
 - SSM Parameters
 
-#### Caveats
-- The supabase terraform provider is very very new. Might not be as stable unfortunately.
-- Currently only supports local `terraform init/plan/apply` as `.tfstate` files are maintained locally -- does not support collaboration yet.
+#### Scalr
+
+![comment](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/scalr_ui.png)
+
+Scalr was chosen to support remote terraform operations. The free tier supports up to <u>50 terraform operations monthly</u>.
+
+`terraform plan` will execute upon raising a PR with commits from the declared directory -- `../iac/`.
+
+![comment](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/scalr_comment.png)
+
+`auto apply` has been disabled and plans have to be manually approved on the Scalr UI, which can be navigated from the PR comments.
+
+![comment](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/scalr_ci.png)
 
 ### Using GitHub Workflows with OIDC to Push Images to Amazon ECR
 
