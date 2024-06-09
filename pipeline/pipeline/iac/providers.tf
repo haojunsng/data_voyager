@@ -5,8 +5,14 @@ terraform {
       version = "> 3.27"
     }
   }
+  backend "remote" {
+    hostname     = "roronoa.scalr.io"
+    organization = "env-v0od6uicoc86gsnsf"
 
-  required_version = ">= 1.0.0"
+    workspaces {
+      name = "Roronoa"
+    }
+  }
 }
 
 provider "aws" {
