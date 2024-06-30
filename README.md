@@ -9,11 +9,11 @@ This repository contains 5 parts -
 I chose to adopt a monorepo approach only because this is more of an exploratory/hobby work and did not want the hassle of maintaining multiple repositories.
 
 
-- [`extract/`](https://github.com/haojunsng/data_voyager/tree/main/pipeline/pipeline/extract) contains the logic of data extraction from STRAVA API.
-- [`load/`](https://github.com/haojunsng/data_voyager/tree/main/pipeline/pipeline/load) contains the logic of loading data from landing buckets to database.
-- [`transformation/`](https://github.com/haojunsng/data_voyager/tree/main/pipeline/pipeline/transformation) contains the transformation logic.
-- [`orchestration/`](https://github.com/haojunsng/data_voyager/tree/main/pipeline/pipeline/orchestration) contains the airflow code and DAGs.
-- [`iac/`](https://github.com/haojunsng/data_voyager/tree/main/pipeline/pipeline/iac) contains the IaC for all necessary resources provisioned.
+- [`extract/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/extract) contains the logic of data extraction from STRAVA API.
+- [`load/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/load) contains the logic of loading data from landing buckets to database.
+- [`transformation/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/transformation) contains the transformation logic.
+- [`orchestration/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/orchestration) contains the airflow code and DAGs.
+- [`iac/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/iac) contains the IaC for all necessary resources provisioned.
 
 ### `extract`
 ---
@@ -55,14 +55,14 @@ A monorepo approach to dbt Project management is taken because there will be dep
 ---
 #### Description
 [Airflow](https://airflow.apache.org/) is chosen to manage all orchestration work around extracting, loading and transforming of data.
-- Extraction of data from STRAVA API to S3 bucket: [StravaToS3Operator](https://github.com/haojunsng/data_voyager/blob/main/pipeline/pipeline/orchestration/dags/utils/StravaToS3Operator.py)
-- Loading of data from S3 bucket to Supabase: [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/pipeline/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py)
+- Extraction of data from STRAVA API to S3 bucket: [StravaToS3Operator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/StravaToS3Operator.py)
+- Loading of data from S3 bucket to Supabase: [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py)
 
 #### `StravaToS3Operator` & `S3ToSupabaseOperator`:
 ![dag](https://github.com/haojunsng/simple_pipeline/blob/main/pipeline/assets/dag.png)
-- Custom [StravaToS3Operator](https://github.com/haojunsng/data_voyager/blob/main/pipeline/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
-- Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/pipeline/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
-- Lastly, [DbtOperator](https://github.com/haojunsng/data_voyager/blob/main/pipeline/pipeline/orchestration/dags/utils/DbtOperator.py) which triggers dbt tasks through ECS to execute the transformation logic.
+- Custom [StravaToS3Operator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
+- Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
+- Lastly, [DbtOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/DbtOperator.py) which triggers dbt tasks through ECS to execute the transformation logic.
 - All 3 logic (STRAVA extraction, Loading to Supabase & dbt Transformation) are managed in `extract/`, `load/` and `transformation/` respectively.
 
 #### Deployment of DAGs to Airflow:
