@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/innotechdevops/openmeteo"
@@ -36,21 +37,53 @@ func fetchWeatherData(param openmeteo.Parameter) string {
 }
 
 func produceToKafka(topic string, data []byte, brokers string) {
+	// Create a buffered channel to receive delivery events
+	deliveryChan := make(chan kafka.Event, 1)
+	defer close(deliveryChan) // Ensure channel is closed to avoid leaks
+
+	// Create Kafka producer instance
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers":  brokers,
 		"message.timeout.ms": 20000,
 	})
-	handleError(err, "Failed to create producer")
-	defer producer.Close()
+	if err != nil {
+		log.Fatalf("Failed to create Kafka producer: %v", err)
+	}
+	defer producer.Close() // Ensure producer is closed at the end of function
 
+	// Produce message asynchronously
 	err = producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          data,
-	}, nil)
-	handleError(err, "Failed to produce message")
+	}, deliveryChan)
+	if err != nil {
+		log.Fatalf("Failed to produce message: %v", err)
+	}
 
-	producer.Flush(30 * 1000)
-	fmt.Println("Weather data produced to topic:", topic)
+	// Wait for delivery report
+	select {
+	case e := <-deliveryChan:
+		m := e.(*kafka.Message)
+
+		// Check delivery status
+		if m.TopicPartition.Error != nil {
+			log.Fatalf("Delivery failed: %v", m.TopicPartition.Error)
+		} else {
+			fmt.Printf("Delivered message to topic %s [%d] at offset %v\n",
+				*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
+		}
+
+	case <-time.After(20 * time.Second): // Adjust timeout as needed
+		log.Fatalf("Delivery timed out after 20 seconds")
+	}
+
+	// Flush and wait for all messages to be delivered
+	queueLength := producer.Flush(30 * 1000)
+	if queueLength > 0 {
+		log.Printf("Failed to deliver %d messages", queueLength)
+	} else {
+		fmt.Println("Weather data produced to topic:", topic)
+	}
 }
 
 func main() {
