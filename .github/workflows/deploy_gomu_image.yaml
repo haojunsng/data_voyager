@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'pipeline/pipeline/extract/**'
+      - 'strava/pipeline/extract/**'
 
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./pipeline
+        working-directory: ./strava
     permissions:
       id-token: write
       contents: read

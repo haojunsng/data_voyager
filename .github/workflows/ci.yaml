@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./pipeline
+        working-directory: ./strava
 
     steps:
     - uses: actions/checkout@v2
