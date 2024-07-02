@@ -49,4 +49,4 @@ select
     suffer_score,
     average_temp
 from
-    {{ source('public', 'ods_strava__activity') }}
+    {{ source('public', 'src_strava__activity') }}
