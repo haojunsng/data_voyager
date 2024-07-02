@@ -3,4 +3,4 @@ version: 2
 sources:
   - name: public
     tables:
-      - name: ods_strava__activity
+      - name: src_strava__activity
