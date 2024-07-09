@@ -1,7 +1,8 @@
 # data_voyager
 
 ## Data Architecture
-![Archi](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/archi.png)
+![Archi]![image](https://github.com/haojunsng/data_voyager/assets/51106107/780bf52b-b46f-49f7-9a53-46c668e7694f)
+
 
 ## Repository Navigation
 This repository contains 2 main parts - `strava/` and `weather/`
