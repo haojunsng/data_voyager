@@ -1,7 +1,7 @@
 # data_voyager
 
 ## Data Architecture
-![Archi]![image](https://github.com/haojunsng/data_voyager/assets/51106107/780bf52b-b46f-49f7-9a53-46c668e7694f)
+![image](https://github.com/haojunsng/data_voyager/assets/51106107/780bf52b-b46f-49f7-9a53-46c668e7694f)
 
 
 ## Repository Navigation
