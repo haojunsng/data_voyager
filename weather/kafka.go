@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func createProducer() (*kafka.Producer, error) {
+func createProducer() *kafka.Producer {
 	configMap := &kafka.ConfigMap{
 		"bootstrap.servers":   "localhost:9092",
 		"enable.idempotence":  true,
@@ -18,11 +18,9 @@ func createProducer() (*kafka.Producer, error) {
 	}
 
 	producer, err := kafka.NewProducer(configMap)
-	if err != nil {
-		return nil, err
-	}
+	handleError(err, "Failed to create Kafka Producer")
 
-	return producer, nil
+	return producer
 }
 
 func produceMessage(producer *kafka.Producer, topic string, message string) error {
@@ -33,17 +31,11 @@ func produceMessage(producer *kafka.Producer, topic string, message string) erro
 		Value:          []byte(message),
 		Headers:        []kafka.Header{{Key: "EventID", Value: []byte(uuid.New().String())}},
 	}, deliveryChan)
-
-	if err != nil {
-		return err
-	}
+	handleError(err, "Failed to produce Kafka Message")
 
 	e := <-deliveryChan
 	m := e.(*kafka.Message)
-
-	if m.TopicPartition.Error != nil {
-		return m.TopicPartition.Error
-	}
+	handleError(m.TopicPartition.Error, "Failed to deliver message")
 
 	return nil
 }
