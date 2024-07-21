@@ -1,4 +1,4 @@
-package main
+package common
 
 type WeatherData struct {
 	Latitude             float64 `json:"latitude"`

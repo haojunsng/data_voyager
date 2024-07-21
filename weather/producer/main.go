@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"time"
+	"weather/common"
 )
 
 func main() {
@@ -23,15 +24,15 @@ func main() {
 		case <-ticker.C:
 			param := createOpenMeteoParams()
 			resp := fetchWeatherData(param)
-			var weatherData WeatherData
+			var weatherData common.WeatherData
 
 			// Unmarshal JSON data into struct
 			err := json.Unmarshal([]byte(resp), &weatherData)
-			handleError(err, "Failed to unmarshal JSON into struct")
+			common.HandleError(err, "Failed to unmarshal JSON into struct")
 
 			message := fmt.Sprintf("Temperature: %.2f, WindSpeed: %.2f",
 				weatherData.CurrentWeather.Temperature, weatherData.CurrentWeather.WindSpeed)
-			produceMessage(producer, KafkaTopic, message)
+			produceMessage(producer, common.KafkaTopic, message)
 		case <-done:
 			fmt.Println("Received interrupt signal, shutting down...")
 			return

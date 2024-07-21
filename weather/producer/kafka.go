@@ -1,6 +1,8 @@
 package main
 
 import (
+	"weather/common"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
 )
@@ -18,7 +20,7 @@ func createProducer() *kafka.Producer {
 	}
 
 	producer, err := kafka.NewProducer(configMap)
-	handleError(err, "Failed to create Kafka Producer")
+	common.HandleError(err, "Failed to create Kafka Producer")
 
 	return producer
 }
@@ -31,11 +33,11 @@ func produceMessage(producer *kafka.Producer, topic string, message string) erro
 		Value:          []byte(message),
 		Headers:        []kafka.Header{{Key: "EventID", Value: []byte(uuid.New().String())}},
 	}, deliveryChan)
-	handleError(err, "Failed to produce Kafka Message")
+	common.HandleError(err, "Failed to produce Kafka Message")
 
 	e := <-deliveryChan
 	m := e.(*kafka.Message)
-	handleError(m.TopicPartition.Error, "Failed to deliver message")
+	common.HandleError(m.TopicPartition.Error, "Failed to deliver message")
 
 	return nil
 }
