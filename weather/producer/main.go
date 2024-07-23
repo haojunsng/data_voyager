@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"time"
@@ -14,7 +15,7 @@ import (
 func main() {
 	producer, err := NewProducer()
 	if err != nil {
-		log.Fatalf("%s: %s", message, err)
+		log.Fatalf("Failed to create Kafka Producer: %s", err)
 	}
 	defer producer.Close()
 
@@ -37,14 +38,14 @@ func main() {
 			// Unmarshal JSON data into struct
 			err = json.Unmarshal([]byte(resp), &weatherData)
 			if err != nil {
-				log.Fatalf("%s: %s", message, err)
+				log.Fatalf("Failed to unmarshal weather data: %s", err)
 			}
 
 			message := fmt.Sprintf("Temperature: %.2f, WindSpeed: %.2f",
 				weatherData.CurrentWeather.Temperature, weatherData.CurrentWeather.WindSpeed)
-			err = producer.ProduceMessage(KafkaTopic, message)
+			err = producer.ProduceMessage(common.KafkaTopic, message)
 			if err != nil {
-				log.Fatalf("%s: %s", message, err)
+				log.Fatalf("Failed to produce Kafka message: %s", err)
 			}
 		case <-done:
 			fmt.Println("Received interrupt signal, shutting down...")

@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
+	"log"
+	"time"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
-
 	"weather/common"
 )
 
@@ -25,7 +28,7 @@ func NewProducer() (*Producer, error) {
 
 	producer, err := kafka.NewProducer(configMap)
 	if err != nil {
-		log.Fatalf("%s: %s", message, err)
+		return nil, err
 	}
 	return &Producer{KafkaProducer: producer}, nil
 }
@@ -41,17 +44,16 @@ func (p *Producer) ProduceMessage(topic string, message string) error {
 		Headers:        []kafka.Header{{Key: "EventID", Value: []byte(uuid.New().String())}},
 	}, deliveryChan)
 	if err != nil {
-		log.Fatalf("%s: %s", message, err)
+		return err
 	}
 	select {
 	case e := <-deliveryChan:
 		m := e.(*kafka.Message)
-		err := m.TopicPartition.Error
-		if err != nil {
-			log.Fatalf("%s: %s", message, err)
+		if m.TopicPartition.Error != nil {
+			return m.TopicPartition.Error
 		}
 	case <-ctx.Done():
-		//
+		// TODO : Handle context timeout if needed
 	}
 	return nil
 }
