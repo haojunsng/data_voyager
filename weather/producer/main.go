@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"time"
-	
+
 	"weather/common"
 )
 
