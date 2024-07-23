@@ -1,13 +1,17 @@
 package main
 
 import (
-	"weather/common"
-
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
+
+	"weather/common"
 )
 
-func createProducer() *kafka.Producer {
+type Producer struct {
+	KafkaProducer *kafka.Producer
+}
+
+func NewProducer() (*Producer, error) {
 	configMap := &kafka.ConfigMap{
 		"bootstrap.servers":   "localhost:9092",
 		"enable.idempotence":  true,
@@ -20,24 +24,38 @@ func createProducer() *kafka.Producer {
 	}
 
 	producer, err := kafka.NewProducer(configMap)
-	common.HandleError(err, "Failed to create Kafka Producer")
-
-	return producer
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
+	return &Producer{KafkaProducer: producer}, nil
 }
 
-func produceMessage(producer *kafka.Producer, topic string, message string) error {
+func (p *Producer) ProduceMessage(topic string, message string) error {
 	deliveryChan := make(chan kafka.Event, 1)
-
-	err := producer.Produce(&kafka.Message{
+	defer close(deliveryChan)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err := p.KafkaProducer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          []byte(message),
 		Headers:        []kafka.Header{{Key: "EventID", Value: []byte(uuid.New().String())}},
 	}, deliveryChan)
-	common.HandleError(err, "Failed to produce Kafka Message")
-
-	e := <-deliveryChan
-	m := e.(*kafka.Message)
-	common.HandleError(m.TopicPartition.Error, "Failed to deliver message")
-
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
+	select {
+	case e := <-deliveryChan:
+		m := e.(*kafka.Message)
+		err := m.TopicPartition.Error
+		if err != nil {
+			log.Fatalf("%s: %s", message, err)
+		}
+	case <-ctx.Done():
+		//
+	}
 	return nil
+}
+
+func (p *Producer) Close() {
+	p.KafkaProducer.Close()
 }

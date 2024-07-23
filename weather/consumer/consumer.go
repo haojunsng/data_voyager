@@ -20,16 +20,22 @@ func consume() error {
 	}
 
 	c, err := kafka.NewConsumer(&config)
-	common.HandleError(err, "Failed to create consumer")
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
 	defer c.Close()
 
 	err = c.Subscribe(common.KafkaTopic, nil)
-	common.HandleError(err, "Failed to subscribe to topic")
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
 
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(common.AWSRegion)},
 	)
-	common.HandleError(err, "Failed to create AWS Session")
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
 
 	s3Svc := s3.New(sess)
 
@@ -46,7 +52,9 @@ func consume() error {
 		fmt.Printf("Received message: %s\n", string(msg.Value))
 
 		err = uploadToS3(s3Svc, common.S3Bucket, string(msg.Value))
-		common.HandleError(err, "Failed to upload to S3")
+		if err != nil {
+			log.Fatalf("%s: %s", message, err)
+		}
 	}
 }
 
@@ -59,7 +67,9 @@ func uploadToS3(s3Svc *s3.S3, bucket string, message string) error {
 		Body:   strings.NewReader(message),
 	})
 
-	common.HandleError(err, "Failed to put to S3")
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
 
 	fmt.Printf("Successfully uploaded message to S3 with key %s\n", key)
 	return nil

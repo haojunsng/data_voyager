@@ -1,16 +1,21 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
 	"os/signal"
 	"time"
+	
 	"weather/common"
 )
 
 func main() {
-	producer := createProducer()
+	producer, err := NewProducer()
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
 	defer producer.Close()
 
 	ticker := time.NewTicker(1 * time.Minute)
@@ -19,20 +24,28 @@ func main() {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt)
 
+	ctx := context.Background()
+	pipeline := NewWeather()
+
 	for {
 		select {
 		case <-ticker.C:
-			param := createOpenMeteoParams()
-			resp := fetchWeatherData(param)
+			resp := pipeline.FetchData(ctx)
+
 			var weatherData common.WeatherData
 
 			// Unmarshal JSON data into struct
-			err := json.Unmarshal([]byte(resp), &weatherData)
-			common.HandleError(err, "Failed to unmarshal JSON into struct")
+			err = json.Unmarshal([]byte(resp), &weatherData)
+			if err != nil {
+				log.Fatalf("%s: %s", message, err)
+			}
 
 			message := fmt.Sprintf("Temperature: %.2f, WindSpeed: %.2f",
 				weatherData.CurrentWeather.Temperature, weatherData.CurrentWeather.WindSpeed)
-			produceMessage(producer, common.KafkaTopic, message)
+			err = producer.ProduceMessage(KafkaTopic, message)
+			if err != nil {
+				log.Fatalf("%s: %s", message, err)
+			}
 		case <-done:
 			fmt.Println("Received interrupt signal, shutting down...")
 			return

@@ -1,9 +1,11 @@
 package main
 
 import (
-	"weather/common"
+	"context"
 
 	"github.com/innotechdevops/openmeteo"
+
+	"weather/common"
 )
 
 func createOpenMeteoParams() openmeteo.Parameter {
@@ -22,6 +24,36 @@ func createOpenMeteoParams() openmeteo.Parameter {
 func fetchWeatherData(param openmeteo.Parameter) string {
 	m := openmeteo.New()
 	resp, err := m.Execute(param)
-	common.HandleError(err, "Failed to execute API call")
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
 	return resp
+}
+
+func NewWeather() *Weather {
+	return &Weather{
+		param: &openmeteo.Parameter{
+			Latitude:  openmeteo.Float32(LatitudePunggol),
+			Longitude: openmeteo.Float32(LatitudePunggol),
+			Hourly: &[]string{
+				openmeteo.HourlyTemperature2m,
+				openmeteo.HourlyRelativeHumidity2m,
+				openmeteo.HourlyWindSpeed10m,
+			},
+			CurrentWeather: openmeteo.Bool(true),
+		},
+	}
+}
+
+func (w *Weather) FetchData(ctx context.Context) string {
+	m := openmeteo.New()
+	resp, err := m.Execute(*w.param)
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
+	return resp
+}
+
+type IPipeline interface {
+	FetchData(ctx context.Context) string
 }

@@ -6,5 +6,7 @@ import (
 
 func main() {
 	err := consume()
-	common.HandleError(err, "Failed to run consumer")
+	if err != nil {
+		log.Fatalf("%s: %s", message, err)
+	}
 }
