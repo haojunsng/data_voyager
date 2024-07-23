@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 type KafkaToS3 struct {
@@ -24,10 +23,9 @@ func NewKafkaToS3() (*KafkaToS3, error) {
 	}
 
 	s3Session, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2"),
+		Region: aws.String("ap-southeast-1"),
 	})
 	if err != nil {
-		log.Fatalf("Failed to create S3 session: %s", err)
 		return nil, err
 	}
 
@@ -41,22 +39,27 @@ func NewKafkaToS3() (*KafkaToS3, error) {
 
 func (k *KafkaToS3) ProcessMessages(ctx context.Context, topic string, bucketName string) {
 	if err := k.Consumer.Subscribe(topic); err != nil {
-		log.Fatalf("Failed to subscribe to topic: %s", err)
+		log.Printf("Failed to subscribe to topic %s: %s", topic, err)
 		return
 	}
 
 	for {
 		select {
-		case msg := <-k.Consumer.KafkaConsumer.Messages():
-			log.Printf("Processing message: %s", string(msg.Value))
+		case msg := <-k.Consumer.KafkaConsumer.Events():
+			switch e := msg.(type) {
+			case *kafka.Message:
+				log.Printf("Processing message: %s", string(e.Value))
 
-			_, err := k.S3Client.PutObject(&s3.PutObjectInput{
-				Bucket: aws.String(bucketName),
-				Key:    aws.String(time.Now().Format("2006-01-02-15-04-05") + ".txt"),
-				Body:   bytes.NewReader(msg.Value),
-			})
-			if err != nil {
-				log.Printf("Failed to upload to S3: %s", err)
+				_, err := k.S3Client.PutObject(&s3.PutObjectInput{
+					Bucket: aws.String(bucketName),
+					Key:    aws.String(time.Now().Format("2006-01-02-15-04-05") + ".txt"),
+					Body:   bytes.NewReader(e.Value),
+				})
+				if err != nil {
+					log.Printf("Failed to upload to S3: %s", err)
+				}
+			case kafka.Error:
+				log.Printf("Kafka error: %v", e)
 			}
 
 		case <-ctx.Done():

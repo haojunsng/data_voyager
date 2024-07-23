@@ -1,55 +1,76 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"log"
+	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-type Consumer struct {
-	KafkaConsumer *kafka.Consumer
+type KafkaToS3 struct {
+	Consumer *Consumer
+	S3Client *s3.S3
 }
 
-func NewConsumer() (*Consumer, error) {
-	configMap := &kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9092",
-		"group.id":          "your-consumer-group",
-		"auto.offset.reset": "earliest",
-	}
-
-	consumer, err := kafka.NewConsumer(configMap)
+func NewKafkaToS3() (*KafkaToS3, error) {
+	consumer, err := NewConsumer()
 	if err != nil {
-		log.Fatalf("Failed to create Kafka Consumer: %s", err)
 		return nil, err
 	}
 
-	return &Consumer{KafkaConsumer: consumer}, nil
+	s3Session, err := session.NewSession(&aws.Config{
+		Region: aws.String("ap-southeast-1"),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	s3Client := s3.New(s3Session)
+
+	return &KafkaToS3{
+		Consumer: consumer,
+		S3Client: s3Client,
+	}, nil
 }
 
-func (c *Consumer) Subscribe(topic string) error {
-	err := c.KafkaConsumer.Subscribe(topic, nil)
-	if err != nil {
-		log.Fatalf("Failed to subscribe to topic %s: %s", topic, err)
+func (k *KafkaToS3) ProcessMessages(ctx context.Context, topic string, bucketName string) error {
+	if err := k.Consumer.Subscribe(topic); err != nil {
 		return err
 	}
-	return nil
-}
 
-func (c *Consumer) ConsumeMessages(ctx context.Context) {
 	for {
 		select {
-		case msg := <-c.KafkaConsumer.Messages():
-			log.Printf("Received message: %s", string(msg.Value))
-			// Add processing logic here
+		case msg := <-k.Consumer.KafkaConsumer.Events():
+			switch e := msg.(type) {
+			case *kafka.Message:
+				log.Printf("Processing message: %s", string(e.Value))
+
+				_, err := k.S3Client.PutObject(&s3.PutObjectInput{
+					Bucket: aws.String(bucketName),
+					Key:    aws.String(time.Now().Format("2006-01-02-15-04-05") + ".txt"),
+					Body:   bytes.NewReader(e.Value),
+				})
+				if err != nil {
+					log.Printf("Failed to upload to S3: %s", err)
+					return err
+				}
+			case kafka.Error:
+				log.Printf("Kafka error: %v", e)
+				return e
+			}
 
 		case <-ctx.Done():
-			log.Println("Shutting down consumer")
-			return
+			log.Println("Shutting down KafkaToS3")
+			return ctx.Err()
 		}
 	}
 }
 
-func (c *Consumer) Close() {
-	c.KafkaConsumer.Close()
+func (k *KafkaToS3) Close() {
+	k.Consumer.Close()
 }
