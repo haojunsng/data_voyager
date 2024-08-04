@@ -55,8 +55,3 @@ terraform.rc
 **/dev/logs/**
 **/dev/plugins/**
 **/dev/config/**
-
-# Ignore golang binary executables
-weather/weather
-weather/producer/producer
-weather/consumer/consumer
