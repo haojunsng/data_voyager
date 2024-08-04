@@ -15,7 +15,7 @@ import (
 func main() {
 	producer, err := NewProducer()
 	if err != nil {
-		log.Fatalf("Failed to create Kafka Producer: %s", err)
+		log.Fatalf("failed to create Kafka Producer: %s", err)
 	}
 	defer producer.Close()
 
@@ -35,20 +35,23 @@ func main() {
 
 			var weatherData common.WeatherData
 
-			// Unmarshal JSON data into struct
+			// Unmarshal JSON data into struct to quickly validate data
 			err = json.Unmarshal([]byte(resp), &weatherData)
 			if err != nil {
-				log.Fatalf("Failed to unmarshal weather data: %s", err)
+				log.Fatalf("failed to unmarshal weather data: %s", err)
 			}
 
-			message := fmt.Sprintf("Temperature: %.2f, WindSpeed: %.2f",
-				weatherData.CurrentWeather.Temperature, weatherData.CurrentWeather.WindSpeed)
-			err = producer.ProduceMessage(common.KafkaTopic, message)
+			message, err := json.Marshal(weatherData)
 			if err != nil {
-				log.Fatalf("Failed to produce Kafka message: %s", err)
+				log.Fatalf("failed to marshal weather data to JSON: %s", err)
+			}
+
+			err = producer.ProduceMessage(common.KafkaTopic, string(message))
+			if err != nil {
+				log.Fatalf("failed to produce Kafka message: %s", err)
 			}
 		case <-done:
-			fmt.Println("Received interrupt signal, shutting down...")
+			fmt.Println("received interrupt signal, shutting down...")
 			return
 		}
 	}

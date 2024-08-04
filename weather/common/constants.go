@@ -13,7 +13,7 @@ const (
 	MaxPressure      float32 = 1100.0
 	MinWindSpeed     float32 = 0.0
 	MaxWindSpeed     float32 = 300.0
-	GroupID          string  = "weather_consumer_group"
-	S3Bucket         string  = "gomu-landing"
+	GroupID          string  = "weather_consumer"
+	S3Bucket         string  = "gomu-landing-bucket"
 	AWSRegion        string  = "ap-southeast-1"
 )

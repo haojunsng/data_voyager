@@ -47,9 +47,9 @@ func (w *Weather) FetchData(ctx context.Context) string {
 	case resp := <-respChan:
 		return resp
 	case err := <-errChan:
-		log.Fatalf("Failed to fetch weather data: %s", err)
+		log.Fatalf("failed to fetch weather data: %s", err)
 	case <-ctx.Done():
-		log.Fatalf("FetchData timed out or was canceled: %s", ctx.Err())
+		log.Fatalf("fetchData timed out or was canceled: %s", ctx.Err())
 	}
 
 	return ""

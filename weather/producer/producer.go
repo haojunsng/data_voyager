@@ -9,7 +9,7 @@ import (
 )
 
 type Producer struct {
-	KafkaProducer *kafka.Producer
+	Weather *kafka.Producer
 }
 
 func NewProducer() (*Producer, error) {
@@ -28,7 +28,7 @@ func NewProducer() (*Producer, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Producer{KafkaProducer: producer}, nil
+	return &Producer{Weather: producer}, nil
 }
 
 func (p *Producer) ProduceMessage(topic string, message string) error {
@@ -36,7 +36,7 @@ func (p *Producer) ProduceMessage(topic string, message string) error {
 	defer close(deliveryChan)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	err := p.KafkaProducer.Produce(&kafka.Message{
+	err := p.Weather.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          []byte(message),
 		Headers:        []kafka.Header{{Key: "EventID", Value: []byte(uuid.New().String())}},
@@ -57,5 +57,5 @@ func (p *Producer) ProduceMessage(topic string, message string) error {
 }
 
 func (p *Producer) Close() {
-	p.KafkaProducer.Close()
+	p.Weather.Close()
 }
