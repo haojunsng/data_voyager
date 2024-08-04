@@ -58,3 +58,5 @@ terraform.rc
 
 # Ignore golang binary executables
 weather/weather
+weather/producer/producer
+weather/consumer/consumer
