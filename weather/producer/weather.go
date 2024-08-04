@@ -4,8 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/innotechdevops/openmeteo"
 	"weather/common"
+
+	"github.com/innotechdevops/openmeteo"
 )
 
 type Weather struct {
@@ -15,8 +16,8 @@ type Weather struct {
 func NewWeather() *Weather {
 	return &Weather{
 		param: &openmeteo.Parameter{
-			Latitude:  openmeteo.Float32(LatitudePunggol),
-			Longitude: openmeteo.Float32(LatitudePunggol),
+			Latitude:  openmeteo.Float32(common.LatitudePunggol),
+			Longitude: openmeteo.Float32(common.LatitudePunggol),
 			Hourly: &[]string{
 				openmeteo.HourlyTemperature2m,
 				openmeteo.HourlyRelativeHumidity2m,
