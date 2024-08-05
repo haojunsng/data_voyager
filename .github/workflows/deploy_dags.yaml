@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'strava/pipeline/orchestration/dags/**'
+      - 'orchestration/dags/**'
 
 
 jobs:
@@ -31,4 +31,4 @@ jobs:
       - name: Upload Python files to S3 Bucket
         run: |
           echo "Syncing DAGs to S3..."
-          aws s3 sync pipeline/orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only
+          aws s3 sync orchestration/dags/ s3://gomu-airflow-s3/dags/ --size-only
