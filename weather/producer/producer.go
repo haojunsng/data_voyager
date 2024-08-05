@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"weather/common"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
 )
@@ -14,7 +16,7 @@ type Producer struct {
 
 func NewProducer() (*Producer, error) {
 	configMap := &kafka.ConfigMap{
-		"bootstrap.servers":   "localhost:9092",
+		"bootstrap.servers":   common.KafkaTopic,
 		"enable.idempotence":  true,
 		"acks":                "all",
 		"compression.type":    "snappy",

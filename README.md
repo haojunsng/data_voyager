@@ -5,7 +5,7 @@
 
 
 ## Repository Navigation
-This repository contains 2 main parts - `strava/` and `weather/`
+This repository contains 3 main parts - `strava/`, `weather/` and `iac/`
 
 I chose to adopt a monorepo approach only because this is more of an exploratory/hobby work and did not want the hassle of maintaining multiple repositories.
 
@@ -14,7 +14,7 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 - A batch ELT data pipeline in Python, connecting to Postgres DB, orchestrated by Airflow and dbt (through ECS).
 
 [`weather/`](#weather) contains all code around the weather pipeline.
-- A near-realtime data pipeline in Golang utilizing Kafka on a Kubernetes Service, connecting to MongoDB, with Terraform as the IaC.
+- A realtime data pipeline in Golang utilizing Kafka on a Kubernetes Service, connecting to Cassandra, with Terraform as the IaC.
 
 [`iac/`](#iac) contains all Terraform (chosen IaC) code.
 - All cloud resources with the exception of SSM Parameters are provisioned using Terraform.
@@ -53,12 +53,12 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 [Supabase](https://supabase.com/) is chosen as the postgres database for this project mostly because they recently went GA, and the UI looks pretty clean and most importantly I can keep within the free tier very comfortably.
 
 ##### Supabase
-![supabase](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/supabase.png)
+![supabase](https://github.com/haojunsng/data_voyager/blob/main/assets/supabase.png)
 - Data loaded from S3.
 
 #### `transformation`
 ---
-![dbt](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/dbt.png)
+![dbt](https://github.com/haojunsng/data_voyager/blob/main/assets/dbt.png)
 
 [dbt](https://docs.getdbt.com/docs/introduction) is chosen to handle all data transformation work required.
 
@@ -74,14 +74,14 @@ A monorepo approach to dbt Project management is taken because there will be dep
 - Loading of data from S3 bucket to Supabase: [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py)
 
 ##### `StravaToS3Operator` & `S3ToSupabaseOperator`:
-![dag](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/dag.png)
+![dag](https://github.com/haojunsng/data_voyager/blob/main/assets/dag.png)
 - Custom [StravaToS3Operator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
 - Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
 - Lastly, [DbtOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/DbtOperator.py) which triggers dbt tasks through ECS to execute the transformation logic.
 - All 3 logic (STRAVA extraction, Loading to Supabase & dbt Transformation) are managed in `extract/`, `load/` and `transformation/` respectively.
 
 ##### Deployment of DAGs to Airflow:
-![s3](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/s3.png)
+![s3](https://github.com/haojunsng/data_voyager/blob/main/assets/s3.png)
 - Deployed to AWS S3 bucket through Github Actions `aws s3 sync` for MWAA cluster
 
 
@@ -97,16 +97,20 @@ A monorepo approach to dbt Project management is taken because there will be dep
 #### Kafka Producer
 This was implemented in golang with [Open-Meteo API](https://github.com/innotechdevops/openmeteo).
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/weather/assets/kafka_ui_live_messages.png)
+![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/kafka_ui_live_messages.png)
+
+#### Kafka Consumer
+This is also implemented in golang to consume events from a specified Kafka topic, processes the events, and then lands the data in an S3 bucket and a Cassandra instance.
 
 ---
 
 <a name="iac"></a>
 ### `iac/`
-##### Description
+
+#### Description
 [Terraform](https://www.terraform.io/) is chosen to support the IaC for this entire strava pipeline project.
 
-#### Resources maintained using Terraform:
+##### Resources maintained using Terraform:
 - ECS Task Definition
 - ECR
 - Cloudwatch Logs
@@ -121,22 +125,22 @@ This was implemented in golang with [Open-Meteo API](https://github.com/innotech
     - ECS Task Role
     - Respective IAM policies required around authorisation management
 
-#### Resources NOT maintained using Terraform:
+##### Resources NOT maintained using Terraform:
 - SSM Parameters
 
-##### Scalr
+#### Scalr
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/scalr_ui.png)
+![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/scalr_ui.png)
 
 Scalr was chosen to support remote terraform operations. The free tier supports up to <u>50 terraform operations monthly</u>.
 
 `terraform plan` will execute upon raising a PR with commits from the declared directory -- `iac/`.
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/scalr_comment.png)
+![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/scalr_comment.png)
 
 `auto apply` has been disabled and plans have to be manually approved on the Scalr UI, which can be navigated from the PR comments.
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/scalr_ci.png)
+![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/scalr_ci.png)
 
 ### Using GitHub Workflows with OIDC to Push Images to Amazon ECR
 
