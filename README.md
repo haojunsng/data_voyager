@@ -5,7 +5,7 @@
 
 
 ## Repository Navigation
-This repository contains 2 main parts - `strava/` and `weather/`
+This repository contains 3 main parts - `strava/`, `weather/` and `iac/`
 
 I chose to adopt a monorepo approach only because this is more of an exploratory/hobby work and did not want the hassle of maintaining multiple repositories.
 
@@ -14,7 +14,7 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 - A batch ELT data pipeline in Python, connecting to Postgres DB, orchestrated by Airflow and dbt (through ECS).
 
 [`weather/`](#weather) contains all code around the weather pipeline.
-- A near-realtime data pipeline in Golang utilizing Kafka on a Kubernetes Service, connecting to MongoDB, with Terraform as the IaC.
+- A realtime data pipeline in Golang utilizing Kafka on a Kubernetes Service, connecting to Cassandra, with Terraform as the IaC.
 
 [`iac/`](#iac) contains all Terraform (chosen IaC) code.
 - All cloud resources with the exception of SSM Parameters are provisioned using Terraform.
@@ -99,14 +99,18 @@ This was implemented in golang with [Open-Meteo API](https://github.com/innotech
 
 ![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/kafka_ui_live_messages.png)
 
+#### Kafka Consumer
+This is also implemented in golang to consume events from a specified Kafka topic, processes the events, and then lands the data in an S3 bucket and a Cassandra instance.
+
 ---
 
 <a name="iac"></a>
 ### `iac/`
-##### Description
+
+#### Description
 [Terraform](https://www.terraform.io/) is chosen to support the IaC for this entire strava pipeline project.
 
-#### Resources maintained using Terraform:
+##### Resources maintained using Terraform:
 - ECS Task Definition
 - ECR
 - Cloudwatch Logs
@@ -121,10 +125,10 @@ This was implemented in golang with [Open-Meteo API](https://github.com/innotech
     - ECS Task Role
     - Respective IAM policies required around authorisation management
 
-#### Resources NOT maintained using Terraform:
+##### Resources NOT maintained using Terraform:
 - SSM Parameters
 
-##### Scalr
+#### Scalr
 
 ![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/scalr_ui.png)
 
