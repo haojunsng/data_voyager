@@ -16,7 +16,7 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 [`weather/`](#weather) contains all code around the weather pipeline.
 - A near-realtime data pipeline in Golang utilizing Kafka on a Kubernetes Service, connecting to MongoDB, with Terraform as the IaC.
 
-['iac/'](#iac) contains all Terraform (chosen IaC) code.
+[`iac/`](#iac) contains all Terraform (chosen IaC) code.
 - All cloud resources with the exception of SSM Parameters are provisioned using Terraform.
 
 ---
@@ -103,7 +103,6 @@ This was implemented in golang with [Open-Meteo API](https://github.com/innotech
 
 <a name="iac"></a>
 ### `iac/`
----
 ##### Description
 [Terraform](https://www.terraform.io/) is chosen to support the IaC for this entire strava pipeline project.
 
