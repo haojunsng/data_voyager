@@ -11,10 +11,13 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 
 
 [`strava/`](#strava) contains all code around the strava pipeline.
-- A batch ELT data pipeline in Python, connecting to Postgres DB, orchestrated by Airflow and dbt (through ECS), with Terraform managing the infrastructure as code (IaC).
+- A batch ELT data pipeline in Python, connecting to Postgres DB, orchestrated by Airflow and dbt (through ECS).
 
 [`weather/`](#weather) contains all code around the weather pipeline.
 - A near-realtime data pipeline in Golang utilizing Kafka on a Kubernetes Service, connecting to MongoDB, with Terraform as the IaC.
+
+['iac/'](#iac) contains all Terraform (chosen IaC) code.
+- All cloud resources with the exception of SSM Parameters are provisioned using Terraform.
 
 ---
 <a name="strava"></a>
@@ -25,7 +28,6 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 - [`load/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/load) contains the logic of loading data from landing buckets to database.
 - [`transformation/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/transformation) contains the transformation logic.
 - [`orchestration/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/orchestration) contains the airflow code and DAGs.
-- [`iac/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/iac) contains the IaC for all necessary resources provisioned.
 
 
 #### `extract`
@@ -88,7 +90,19 @@ A monorepo approach to dbt Project management is taken because there will be dep
 - Symlinked to `orchestration/dags/`
 - Use `docker-compose up` to spin up local airflow
 
-#### `iac`
+---
+<a name="weather"></a>
+### `weather/`
+
+#### Kafka Producer
+This was implemented in golang with [Open-Meteo API](https://github.com/innotechdevops/openmeteo).
+
+![comment](https://github.com/haojunsng/data_voyager/blob/main/weather/assets/kafka_ui_live_messages.png)
+
+---
+
+<a name="iac"></a>
+### `iac/`
 ---
 ##### Description
 [Terraform](https://www.terraform.io/) is chosen to support the IaC for this entire strava pipeline project.
@@ -111,30 +125,19 @@ A monorepo approach to dbt Project management is taken because there will be dep
 #### Resources NOT maintained using Terraform:
 - SSM Parameters
 
-#### Scalr
+##### Scalr
 
 ![comment](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/scalr_ui.png)
 
 Scalr was chosen to support remote terraform operations. The free tier supports up to <u>50 terraform operations monthly</u>.
 
-`terraform plan` will execute upon raising a PR with commits from the declared directory -- `../iac/`.
+`terraform plan` will execute upon raising a PR with commits from the declared directory -- `iac/`.
 
 ![comment](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/scalr_comment.png)
 
 `auto apply` has been disabled and plans have to be manually approved on the Scalr UI, which can be navigated from the PR comments.
 
 ![comment](https://github.com/haojunsng/data_voyager/blob/main/strava/assets/scalr_ci.png)
-
----
-<a name="weather"></a>
-### `weather/`
-
-#### Kafka Producer
-This was implemented in golang with [Open-Meteo API](https://github.com/innotechdevops/openmeteo).
-
-![comment](https://github.com/haojunsng/data_voyager/blob/main/weather/assets/kafka_ui_live_messages.png)
-
----
 
 ### Using GitHub Workflows with OIDC to Push Images to Amazon ECR
 
