@@ -10,4 +10,4 @@ pre-commit:
 
 test:
 	@echo "Running tests..."
-	cd orchestration/dags && python tests/dag_integrity.py
+	cd strava/pipeline/orchestration/dags && python tests/dag_integrity.py

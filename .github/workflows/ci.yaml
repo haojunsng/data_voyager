@@ -32,5 +32,5 @@ jobs:
         source $(poetry env info --path)/bin/activate && pre-commit run --all-files
     - name: Run tests for DAGs
       run: |
-        cd ../orchestration/dags
+        cd pipeline/orchestration/dags
         source $(poetry env info --path)/bin/activate && python tests/dag_integrity.py
