@@ -2,7 +2,7 @@
 
 setup:
 	@echo "Installing necessary packages for this repository..."
-	brew install $(<packages.txt)
+	brew bundle
 
 pre-commit:
 	@echo "Setting up pre-commit hooks..."
