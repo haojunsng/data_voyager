@@ -27,6 +27,6 @@ const (
 
 // AWS S3 configuration
 const (
-	S3Bucket = "gomu-landing-bucket"
+	S3Bucket  = "gomu-landing-bucket"
 	AWSRegion = "ap-southeast-1"
 )
