@@ -18,3 +18,7 @@ terraform {
 provider "aws" {
   region = "ap-southeast-1"
 }
+
+provider "kubernetes" {
+  config_context = module.eks.cluster_arn
+}
