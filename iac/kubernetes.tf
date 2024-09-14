@@ -31,11 +31,11 @@ resource "kubernetes_deployment" "weather_app" {
           }
 
           env {
-            name = "KAFKA_BROKER"
+            name = "kafka-broker"
             value_from {
               secret_key_ref {
-                name = kubernetes_secret.kafka_broker.metadata[0].name
-                key  = "kafka_broker"
+                name = kubernetes_secret.kafka-broker.metadata[0].name
+                key  = "kafka-broker"
               }
             }
           }
@@ -51,11 +51,11 @@ resource "kubernetes_deployment" "weather_app" {
           }
 
           env {
-            name = "KAFKA_BROKER"
+            name = "kafka-broker"
             value_from {
               secret_key_ref {
-                name = kubernetes_secret.kafka_broker.metadata[0].name
-                key  = "kafka_broker"
+                name = kubernetes_secret.kafka-broker.metadata[0].name
+                key  = "kafka-broker"
               }
             }
           }

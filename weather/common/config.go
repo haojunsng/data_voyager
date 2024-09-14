@@ -9,11 +9,11 @@ import (
 )
 
 type Config struct {
-	KafkaBroker string `config:"kafka_broker"`
+	KafkaBroker string `config:"kafka-broker"`
 }
 
 var (
-	KafkaBroker = "localhost:9092" // default value to be overridden in production using kafka_broker
+	KafkaBroker = "localhost:9092" // default value to be overridden in production using kafka-broker
 )
 
 func init() {

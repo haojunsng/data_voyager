@@ -34,16 +34,16 @@ module "eks" {
   }
 }
 
-data "aws_ssm_parameter" "kafka_broker" {
-  name = "kafka_broker"
+data "aws_ssm_parameter" "kafka-broker" {
+  name = "kafka-broker"
 }
 
-resource "kubernetes_secret" "kafka_broker" {
+resource "kubernetes_secret" "kafka-broker" {
   metadata {
-    name      = "kafka_broker"
+    name      = "kafka-broker"
     namespace = "default"
   }
   data = {
-    password = data.aws_ssm_parameter.kafka_broker.value
+    password = data.aws_ssm_parameter.kafka-broker.value
   }
 }

@@ -45,8 +45,8 @@ data "aws_msk_bootstrap_brokers" "msk_brokers" {
   cluster_arn = aws_msk_cluster.kafka.arn
 }
 
-resource "aws_ssm_parameter" "kafka_broker" {
-  name  = "kafka_broker"
+resource "aws_ssm_parameter" "kafka-broker" {
+  name  = "kafka-broker"
   type  = "String"
-  value = join(",", data.aws_msk_bootstrap_brokers.msk_brokers.bootstrap_brokers)
+  value = data.aws_msk_bootstrap_brokers.msk_brokers.bootstrap_brokers
 }
