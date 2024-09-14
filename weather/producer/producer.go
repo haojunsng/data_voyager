@@ -16,7 +16,7 @@ type Producer struct {
 
 func NewProducer() (*Producer, error) {
 	configMap := &kafka.ConfigMap{
-		"bootstrap.servers":   common.KafkaTopic,
+		"bootstrap.servers":   common.KafkaBroker,
 		"enable.idempotence":  true,
 		"acks":                "all",
 		"compression.type":    "snappy",
@@ -35,17 +35,21 @@ func NewProducer() (*Producer, error) {
 
 func (p *Producer) ProduceMessage(topic string, message string) error {
 	deliveryChan := make(chan kafka.Event, 1)
+
 	defer close(deliveryChan)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
 	defer cancel()
 	err := p.Weather.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          []byte(message),
 		Headers:        []kafka.Header{{Key: "EventID", Value: []byte(uuid.New().String())}},
 	}, deliveryChan)
+
 	if err != nil {
 		return err
 	}
+
 	select {
 	case e := <-deliveryChan:
 		m := e.(*kafka.Message)

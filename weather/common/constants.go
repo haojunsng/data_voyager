@@ -2,9 +2,8 @@ package common
 
 // Kafka configuration
 const (
-	KafkaBroker = "localhost:9092"
-	KafkaTopic  = "weather_topic"
-	GroupID     = "weather_consumer"
+	KafkaTopic = "weather_topic"
+	GroupID    = "weather_consumer"
 )
 
 // Geographical constants
