@@ -93,7 +93,7 @@ resource "kubernetes_service" "weather_service" {
 
 resource "kubernetes_service_account" "service_account" {
   metadata {
-    name      = "jinbei_oyabun"
+    name      = "jinbei-oyabun"
     namespace = "default"
   }
 }
