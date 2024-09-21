@@ -21,6 +21,7 @@ resource "kubernetes_deployment" "weather_app" {
       }
 
       spec {
+        service_account_name = kubernetes_service_account.my_service_account.metadata[0].name
         container {
           name    = "weather-producer"
           image   = "${aws_ecr_repository.koby_repo.repository_url}:latest"
@@ -87,5 +88,12 @@ resource "kubernetes_service" "weather_service" {
       port        = 8082
       target_port = 8082
     }
+  }
+}
+
+resource "kubernetes_service_account" "service_account" {
+  metadata {
+    name      = "jinbei_oyabun"
+    namespace = "default"
   }
 }

@@ -47,3 +47,30 @@ resource "kubernetes_secret" "kafka-broker" {
     password = data.aws_ssm_parameter.kafka-broker.value
   }
 }
+
+resource "aws_iam_role" "irsa_role_kubernetes" {
+  name = "irsa-role-kubernetes"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Federated = "arn:aws:iam::${local.account_id}:oidc-provider/${local.oidc_provider_url}"
+        },
+        Action = "sts:AssumeRoleWithWebIdentity",
+        Condition = {
+          StringEquals = {
+            "${local.oidc_provider_url}:sub" = "system:serviceaccount:default:${local.sa_name}"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_irsa_s3_policy" {
+  role       = aws_iam_role.kubernetes_irsa_role.name
+  policy_arn = aws_iam_policy.gomu_landing_bucket_policy.arn
+}
