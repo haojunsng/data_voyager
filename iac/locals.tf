@@ -13,4 +13,8 @@ locals {
   kafka_number_of_broker_nodes  = 2
   kafka_ebs_storage_volume_size = 100
   kafka_in_transit_encryption   = "PLAINTEXT"
+
+  # kubernetes
+  oidc_provider_url = data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+  sa_name           = kubernetes_service_account.service_account.metadata[0].name
 }
