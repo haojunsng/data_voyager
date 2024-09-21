@@ -21,7 +21,7 @@ resource "kubernetes_deployment" "weather_app" {
       }
 
       spec {
-        service_account_name = kubernetes_service_account.my_service_account.metadata[0].name
+        service_account_name = local.sa_name
         container {
           name    = "weather-producer"
           image   = "${aws_ecr_repository.koby_repo.repository_url}:latest"
