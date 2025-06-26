@@ -1,7 +1,7 @@
-# data_voyager
+# sh-thousand-sunny
 
 ## Data Architecture
-![image](https://github.com/haojunsng/data_voyager/blob/main/assets/archi.png)
+![image](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/archi.png)
 
 
 ## Repository Navigation
@@ -24,10 +24,10 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 ### `strava/`
 
 
-- [`extract/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/extract) contains the logic of data extraction from STRAVA API.
-- [`load/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/load) contains the logic of loading data from landing buckets to database.
-- [`transformation/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/transformation) contains the transformation logic.
-- [`orchestration/`](https://github.com/haojunsng/data_voyager/tree/main/strava/pipeline/orchestration) contains the airflow code and DAGs.
+- [`extract/`](https://github.com/haojunsng/sh-thousand-sunny/tree/main/strava/pipeline/extract) contains the logic of data extraction from STRAVA API.
+- [`load/`](https://github.com/haojunsng/sh-thousand-sunny/tree/main/strava/pipeline/load) contains the logic of loading data from landing buckets to database.
+- [`transformation/`](https://github.com/haojunsng/sh-thousand-sunny/tree/main/strava/pipeline/transformation) contains the transformation logic.
+- [`orchestration/`](https://github.com/haojunsng/sh-thousand-sunny/tree/main/strava/pipeline/orchestration) contains the airflow code and DAGs.
 
 
 #### `extract`
@@ -53,12 +53,12 @@ I chose to adopt a monorepo approach only because this is more of an exploratory
 [Supabase](https://supabase.com/) is chosen as the postgres database for this project mostly because they recently went GA, and the UI looks pretty clean and most importantly I can keep within the free tier very comfortably.
 
 ##### Supabase
-![supabase](https://github.com/haojunsng/data_voyager/blob/main/assets/supabase.png)
+![supabase](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/supabase.png)
 - Data loaded from S3.
 
 #### `transformation`
 ---
-![dbt](https://github.com/haojunsng/data_voyager/blob/main/assets/dbt.png)
+![dbt](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/dbt.png)
 
 [dbt](https://docs.getdbt.com/docs/introduction) is chosen to handle all data transformation work required.
 
@@ -70,18 +70,18 @@ A monorepo approach to dbt Project management is taken because there will be dep
 ---
 ##### Description
 [Airflow](https://airflow.apache.org/) is chosen to manage all orchestration work around extracting, loading and transforming of data.
-- Extraction of data from STRAVA API to S3 bucket: [StravaToS3Operator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/StravaToS3Operator.py)
-- Loading of data from S3 bucket to Supabase: [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py)
+- Extraction of data from STRAVA API to S3 bucket: [StravaToS3Operator](https://github.com/haojunsng/sh-thousand-sunny/blob/main/strava/pipeline/orchestration/dags/utils/StravaToS3Operator.py)
+- Loading of data from S3 bucket to Supabase: [S3ToSupabaseOperator](https://github.com/haojunsng/sh-thousand-sunny/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py)
 
 ##### `StravaToS3Operator` & `S3ToSupabaseOperator`:
-![dag](https://github.com/haojunsng/data_voyager/blob/main/assets/dag.png)
-- Custom [StravaToS3Operator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
-- Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
-- Lastly, [DbtOperator](https://github.com/haojunsng/data_voyager/blob/main/strava/pipeline/orchestration/dags/utils/DbtOperator.py) which triggers dbt tasks through ECS to execute the transformation logic.
+![dag](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/dag.png)
+- Custom [StravaToS3Operator](https://github.com/haojunsng/sh-thousand-sunny/blob/main/strava/pipeline/orchestration/dags/utils/StravaToS3Operator.py) inherits EcsRunTaskOperator and is created to call the STRAVA API for extraction.
+- Similarly, custom [S3ToSupabaseOperator](https://github.com/haojunsng/sh-thousand-sunny/blob/main/strava/pipeline/orchestration/dags/utils/S3ToSupabaseOperator.py) also inherits EcsRunTaskOperator and helps to load data from my S3 bucket to Supabase Postgres database.
+- Lastly, [DbtOperator](https://github.com/haojunsng/sh-thousand-sunny/blob/main/strava/pipeline/orchestration/dags/utils/DbtOperator.py) which triggers dbt tasks through ECS to execute the transformation logic.
 - All 3 logic (STRAVA extraction, Loading to Supabase & dbt Transformation) are managed in `extract/`, `load/` and `transformation/` respectively.
 
 ##### Deployment of DAGs to Airflow:
-![s3](https://github.com/haojunsng/data_voyager/blob/main/assets/s3.png)
+![s3](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/s3.png)
 - Deployed to AWS S3 bucket through Github Actions `aws s3 sync` for MWAA cluster
 
 
@@ -97,7 +97,7 @@ A monorepo approach to dbt Project management is taken because there will be dep
 #### Kafka Producer
 This was implemented in golang with [Open-Meteo API](https://github.com/innotechdevops/openmeteo).
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/kafka_ui_live_messages.png)
+![comment](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/kafka_ui_live_messages.png)
 
 #### Kafka Consumer
 This is also implemented in golang to consume events from a specified Kafka topic, processes the events, and then lands the data in an S3 bucket and a Cassandra instance.
@@ -130,17 +130,17 @@ This is also implemented in golang to consume events from a specified Kafka topi
 
 #### Scalr
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/scalr_ui.png)
+![comment](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/scalr_ui.png)
 
 Scalr was chosen to support remote terraform operations. The free tier supports up to <u>50 terraform operations monthly</u>.
 
 `terraform plan` will execute upon raising a PR with commits from the declared directory -- `iac/`.
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/scalr_comment.png)
+![comment](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/scalr_comment.png)
 
 `auto apply` has been disabled and plans have to be manually approved on the Scalr UI, which can be navigated from the PR comments.
 
-![comment](https://github.com/haojunsng/data_voyager/blob/main/assets/scalr_ci.png)
+![comment](https://github.com/haojunsng/sh-thousand-sunny/blob/main/assets/scalr_ci.png)
 
 ### Using GitHub Workflows with OIDC to Push Images to Amazon ECR
 
@@ -166,4 +166,4 @@ Confidential credentials, such as API keys and database passwords, are securely 
 
 ### Workflow Management
 [Jira](https://snghaojun18.atlassian.net/jira/software/projects/SNG/boards/2)
-<img width="966" alt="image" src="https://github.com/haojunsng/data_voyager/assets/51106107/e6e24f95-b634-49f9-8298-e6512418eab9">
+<img width="966" alt="image" src="https://github.com/haojunsng/sh-thousand-sunny/assets/51106107/e6e24f95-b634-49f9-8298-e6512418eab9">
